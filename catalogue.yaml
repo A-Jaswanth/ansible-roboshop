@@ -46,7 +46,7 @@
     
     - name: unarchive
       unarchive:
-        scr: /tmp/catalogue.zip
+        src: /tmp/catalogue.zip
         dest: /app
         remote_src: yes
 
@@ -56,7 +56,7 @@
 
     - name: using temp mod
       template:
-        scr: catalogue.service.j2
+        src: catalogue.service.j2
         dest: /etc/systemd/system/catalogue.service
 
     - name: Reload systemd
@@ -66,8 +66,8 @@
     - name: service enable
       service:
         name: catalogue 
-        state: present
-        enable: yes
+        state: started
+        enabled: yes
 
     - name: copying repos
       copy: 
