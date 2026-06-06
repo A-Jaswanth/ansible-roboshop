@@ -42,7 +42,7 @@
     - name: donwloading zip
       get_url:
        url: https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
-       path: /tmp/catalogue.zip
+       dest: /tmp/catalogue.zip
     
     - name: unarchive
       unarchive:
