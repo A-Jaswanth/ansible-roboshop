@@ -1,0 +1,119 @@
+- name : catalogue 
+  hosts: localhost
+  become: yes
+
+  vars:
+    mongodbhost: mongodb.daws90.online
+
+  tasks:
+    - name: disable nodejs
+      command: dnf module disable nodejs -y
+    - name: enable nodejs
+      command: dnf module enable nodejs:20 -y
+    - name:  install nodejs
+      package:
+        name: nodejs
+        state: present
+    - name: Add roboshop system user
+      user:
+      name: roboshop
+      system: yes
+      home: /app
+      shell: /sbin/nologin
+      comment: "roboshop system user"
+
+    - name: remove /app
+      file:
+        path: /app
+        state: absent
+    
+    - name: creating /app
+      file:
+        path: /app
+        state: directory
+
+    - name: deleting .zip
+      file:
+       path: /tmp/catalogue.zip
+       state: absent
+       
+    - name: donwloading zip
+      get_url:
+       url: https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
+       path: /tmp/catalogue.zip
+    
+    - name: unarchive
+      unarchive:
+        scr: /tmp/catalogue.zip
+        dest: /app
+        remote_src: yes
+
+    - name: install dependencies
+      npm:
+        path: /app
+
+    - name: using temp mod
+      template:
+        scr: catalogue.service.j2
+        dest: /etc/systemd/system/catalogue.service
+
+    - name: Reload systemd
+      systemd:
+      daemon_reload: yes
+
+    - name: service enable
+      service:
+        name: catalogue 
+        state: present
+        enable: yes
+
+    - name: copying repos
+      copy: 
+        src: mongo.repo
+        dest: /etc/yum.repos.d/mongo.repo
+    
+    - name: installing mongodb
+      package:
+        name: mongodb-mongosh
+        state: present
+    
+    - name: load products
+      shell: mongosh --host "{{ mongodbhost }}" </app/db/master-data.js
+
+    - name: cmd 
+      command: mongosh --host "{{ mongodbhost }}"
+
+    - name: deamon reload
+      systemd_service:
+        name: catalogue
+        daemon_reload: true
+        
+    - name: enable and start catalogue
+      service:
+        name: catalogue
+        state: restarted
+        enabled: yes
+
+    
+
+
+
+
+   
+
+    
+
+
+
+
+      
+
+    
+
+      
+      
+
+  
+    
+
+
