@@ -18,11 +18,11 @@
         state: present
     - name: Add roboshop system user
       user:
-      name: roboshop
-      system: yes
-      home: /app
-      shell: /sbin/nologin
-      comment: "roboshop system user"
+        name: roboshop
+        system: yes
+        home: /app
+        shell: /sbin/nologin
+        comment: "roboshop system user"
 
     - name: remove /app
       file:
