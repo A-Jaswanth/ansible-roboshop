@@ -1,5 +1,5 @@
 - name : catalogue 
-  hosts: catalogue
+  hosts: 172.31.42.100
   become: yes
 
   vars:
