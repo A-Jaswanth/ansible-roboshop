@@ -1,0 +1,31 @@
+- name: mongodb 
+  hosts: mongodb
+  become: yes
+  
+  vars:
+
+  tasks:
+  - name: installing mongodb
+    package:
+      name: mongodb-org
+      state: present
+
+  - name: using service module
+    service:
+      name: mongod
+      state: started
+      enabled: yes
+
+  - name: replace in file
+    replace:
+      path: /etc/mongod.conf
+      regexp: '127.0.0.1'
+      replace: '0.0.0.0'
+
+  - name: restart
+    service:
+      name: mongod
+      state: restarted
+      enabled: yes
+
+
