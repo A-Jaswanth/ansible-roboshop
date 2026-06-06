@@ -5,6 +5,11 @@
   vars:
 
   tasks:
+  - name: copying repos
+    copy: 
+     src: mongo.repo
+     dest: /etc/yum.repos.d/mongo.repo
+
   - name: installing mongodb
     package:
       name: mongodb-org
